@@ -1,0 +1,132 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.code-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Audio files
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.ogg
+recordings/
+audio_samples/
+
+# Logs
+*.log
+logs/*.log
+debug.log
+error.log
+mcp-shell.log
+
+# Models (Whisper models can be large)
+models/
+*.pt
+*.bin
+*.model
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Configuration files with secrets
+.env
+.env.local
+config.yaml
+secrets.yaml
+
+# Test outputs
+test_outputs/
+test_results/
+coverage.xml
+.coverage
+.pytest_cache/
+
+# Documentation builds
+docs/_build/
+docs/build/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Pipfile
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

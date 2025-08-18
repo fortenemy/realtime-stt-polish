@@ -1,0 +1,25 @@
+# Real-time Speech-to-Text Requirements
+# Core STT Engine
+openai-whisper>=20231117
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# Audio Processing
+sounddevice>=0.4.6
+numpy>=1.24.0
+scipy>=1.10.0
+webrtcvad>=2.0.10
+
+# Real-time Processing
+pyaudio>=0.2.11
+wave>=0.0.2
+
+# Utilities
+colorama>=0.4.6
+tqdm>=4.65.0
+pydub>=0.25.1
+
+# Development
+pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
