@@ -15,8 +15,9 @@ from typing import Optional, Callable, Dict, Any
 from dataclasses import dataclass
 from enum import Enum
 
-from .audio_capture import AudioCapture
-from .voice_activity_detector import SimpleVAD, WebRTCVAD, VADMode
+from audio_capture import AudioCapture
+from voice_activity_detector import SimpleVAD, WebRTCVAD, VADMode
+from stt_engine import WhisperSTTEngine, PolishOptimizedSTT, TranscriptionResult
 
 # Konfiguracja loggingu
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ class SpeechSegment:
     end_time: float
     confidence: float
     sample_rate: int
+    transcription: Optional[TranscriptionResult] = None
     
     @property
     def duration(self) -> float:
@@ -47,6 +49,11 @@ class SpeechSegment:
     def num_samples(self) -> int:
         """Liczba próbek audio"""
         return len(self.audio_data)
+    
+    @property
+    def text(self) -> str:
+        """Tekst transkrypcji (jeśli dostępny)"""
+        return self.transcription.text if self.transcription else ""
 
 class RealtimeSTTPipeline:
     """
@@ -62,7 +69,10 @@ class RealtimeSTTPipeline:
         use_webrtc_vad: bool = True,
         min_segment_duration: float = 0.5,
         max_segment_duration: float = 30.0,
-        silence_timeout: float = 2.0
+        silence_timeout: float = 2.0,
+        enable_stt: bool = True,
+        stt_model: str = "medium",
+        use_polish_optimization: bool = True
     ):
         """
         Inicjalizacja pipeline
@@ -75,6 +85,9 @@ class RealtimeSTTPipeline:
             min_segment_duration: Min. długość segmentu mowy (s)
             max_segment_duration: Max. długość segmentu mowy (s)
             silence_timeout: Timeout ciszy dla zakończenia segmentu (s)
+            enable_stt: Czy włączyć transkrypcję STT
+            stt_model: Model Whisper do użycia
+            use_polish_optimization: Czy używać optymalizacji dla polskiego
         """
         self.sample_rate = sample_rate
         self.chunk_size = chunk_size
@@ -94,6 +107,31 @@ class RealtimeSTTPipeline:
             self.vad = WebRTCVAD(sample_rate=sample_rate, mode=vad_mode)
         else:
             self.vad = SimpleVAD(sample_rate=sample_rate)
+        
+        # STT Engine
+        self.enable_stt = enable_stt
+        self.stt_engine = None
+        if enable_stt:
+            try:
+                if use_polish_optimization:
+                    self.stt_engine = PolishOptimizedSTT(
+                        model_name=stt_model,
+                        language="pl"
+                    )
+                else:
+                    self.stt_engine = WhisperSTTEngine(
+                        model_name=stt_model,
+                        language="pl"
+                    )
+                logger.info(f"🤖 STT Engine inicjalizowany: {stt_model}")
+            except ImportError:
+                logger.warning("⚠️ Whisper nie zainstalowany - STT wyłączony")
+                self.enable_stt = False
+                self.stt_engine = None
+            except Exception as e:
+                logger.error(f"❌ Błąd inicjalizacji STT: {e}")
+                self.enable_stt = False
+                self.stt_engine = None
         
         # Stan pipeline
         self.state = PipelineState.STOPPED
@@ -282,6 +320,22 @@ class RealtimeSTTPipeline:
             sample_rate=self.sample_rate
         )
         
+        # Transkrypcja STT (jeśli włączona)
+        if self.enable_stt and self.stt_engine:
+            try:
+                transcription = self.stt_engine.transcribe_audio(
+                    segment_audio, 
+                    self.sample_rate
+                )
+                segment.transcription = transcription
+                
+                if transcription:
+                    logger.info(f"🎯 Transkrypcja: '{transcription.text}' "
+                               f"(conf={transcription.confidence:.2f})")
+            except Exception as e:
+                logger.error(f"❌ Błąd transkrypcji: {e}")
+                segment.transcription = None
+        
         # Statystyki
         self.total_segments += 1
         self.total_audio_time += segment.duration
@@ -365,3 +419,26 @@ class RealtimeSTTPipeline:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit"""
         self.stop()
+    
+    def set_stt_engine(self, stt_engine):
+        """
+        Ustaw custom STT engine
+        
+        Args:
+            stt_engine: Instancja WhisperSTTEngine lub kompatybilnego silnika
+        """
+        self.stt_engine = stt_engine
+        self.enable_stt = stt_engine is not None
+        logger.info(f"🤖 STT Engine ustawiony: {type(stt_engine).__name__}")
+    
+    def load_stt_model(self):
+        """Załaduj model STT (jeśli nie jest załadowany)"""
+        if self.stt_engine and hasattr(self.stt_engine, 'load_model'):
+            return self.stt_engine.load_model()
+        return True
+    
+    def unload_stt_model(self):
+        """Zwolnij model STT z pamięci"""
+        if self.stt_engine and hasattr(self.stt_engine, 'unload_model'):
+            self.stt_engine.unload_model()
+            logger.info("🗑️ STT model zwolniony z pamięci")

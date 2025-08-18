@@ -4,6 +4,9 @@ openai-whisper>=20231117
 torch>=2.0.0
 torchaudio>=2.0.0
 
+# Alternative lightweight STT (if Whisper too heavy)
+# faster-whisper>=0.10.0
+
 # Audio Processing
 sounddevice>=0.4.6
 numpy>=1.24.0
@@ -23,3 +26,13 @@ pydub>=0.25.1
 pytest>=7.0.0
 black>=23.0.0
 flake8>=6.0.0
+
+# Performance and System Monitoring
+psutil>=5.9.0
+
+# Export formats
+python-docx>=0.8.11
+
+# GUI Requirements (usually pre-installed)
+# tkinter - included with Python on Windows/Mac
+# For Linux: sudo apt-get install python3-tk

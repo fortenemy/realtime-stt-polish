@@ -130,3 +130,32 @@ celerybeat.pid
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Development and debugging files (temporary)
+AUTO_FIX_REPO.bat
+DEBUG_PUSH_ISSUE.bat
+DEBUG_TERMINAL.bat
+EXECUTE_PUSH_NOW.bat
+Fix-GitHubRepo.ps1
+FORCE_PUSH_FIX.bat
+MANUAL_FIX_COMMANDS.bat
+push_to_github.bat
+
+# Temporary documentation files
+CHECK_CURRENT_STATUS.md
+CURSOR_AUTO_FIX.md
+CURSOR_GIT_PUSH_GUIDE.md
+CURSOR_QUICK_STEPS.md
+FILES_TO_COMMIT.md
+GITHUB_SETUP_INSTRUCTIONS.md
+PUSH_TO_GITHUB.md
+QUICK_FIX_NOW.md
+QUICK_PUSH_COMMANDS.md
+RUNNING_AUTO_FIX.md
+SYNC_GITHUB_FIX.md
+
+# IDE workspace files
+*.code-workspace
+
+# Local configuration
+config.json
