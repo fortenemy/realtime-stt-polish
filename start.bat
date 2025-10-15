@@ -21,23 +21,23 @@ set /p choice="  Twój wybór (1-7): "
 if "%choice%"=="1" (
     echo.
     echo  🚀 Uruchamianie GUI Application...
-    python gui_launcher.py
+    py gui_launcher.py
 ) else if "%choice%"=="2" (
     echo.
     echo  🎤 Uruchamianie Command Line Demo...
-    python main.py --mode demo
+    py main.py --mode demo
 ) else if "%choice%"=="3" (
     echo.
     echo  🔧 Testowanie systemu audio...
-    python main.py --mode audio-test
+    py main.py --mode audio-test
 ) else if "%choice%"=="4" (
     echo.
     echo  🧪 Uruchamianie testów systemu...
-    python test_complete_system.py
+    py test_complete_system.py
 ) else if "%choice%"=="5" (
     echo.
     echo  📦 Instalowanie dependencies...
-    python install_complete_system.py
+    py install_complete_system.py
 ) else if "%choice%"=="6" (
     echo.
     echo  📖 Otwieranie dokumentacji...
