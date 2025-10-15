@@ -433,11 +433,10 @@ class PolishOptimizedSTT(WhisperSTTEngine):
         
         # Podstawowe poprawki dla polskiego
         corrections = {
-            # Częste błędy Whisper dla polskiego
-            " w " : " w ",  # Zachowaj spacje
-            "ze ": "że ",   # Typowa pomyłka
-            "sie ": "się ", # Brak polskich znaków
-            "na ": "ną ",   # Tylko jeśli ma sens kontekstowo
+            # Częste błędy Whisper dla polskiego (brak polskich znaków)
+            " sie ": " się ",   # się
+            " ze ": " że ",     # że (tylko jeśli poprzedzone spacją)
+            "ze ": "że ",       # że na początku
         }
         
         processed_text = text

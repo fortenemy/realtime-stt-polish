@@ -13,14 +13,12 @@ import queue
 import time
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Optional, Dict, Any
 import logging
 
 # Import naszych modułów
-import sys
-from pathlib import Path
-
 # Dodaj src do ścieżki jeśli jeszcze nie ma
 current_dir = Path(__file__).parent
 if str(current_dir) not in sys.path:
